@@ -17,15 +17,35 @@ namespace parser
         static void Main(string[] args)
             
             {
+
+                String format_output;
+                Console.OutputEncoding = Encoding.UTF8;
+                Console.WriteLine("Выберите формат вывода: 1 - JSON, 2 - CSV, 3 - XML");
+
+                format_output = Console.ReadKey().KeyChar.ToString();
+
                 var driver = WebDriverManager();
                 driver.Navigate().GoToUrl("https://www.rbc.ru/");
                 string[] links = driver.FindElements(By.ClassName("main__feed__link")).Select(x => x.GetAttribute("href")).ToArray();
-                
                 var data = Parser(links, driver);
-                WriteToJSON(data);
-                WriteToCSV(data);
-                WriteToXML(data);
                 driver.Quit();
+
+                switch (format_output)
+                {
+                    case "1":
+                        WriteToJSON(data);
+                        break;
+                    case "2":
+                        WriteToCSV(data);
+                        break;
+                    case "3":
+                        WriteToXML(data);
+                        break;
+                    default:
+                        Console.WriteLine("Неверный формат вывода");
+                        break;
+                }
+
                 Console.WriteLine("Done!");
                 
             }
